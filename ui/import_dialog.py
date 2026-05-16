@@ -86,9 +86,9 @@ class ImportDialog(ctk.CTkToplevel):
 
         ctk.CTkLabel(
             ref,
-            text="⚠  ต้องมีอย่างน้อย  national_id  หรือ  hn  เพื่อใช้เป็น key การ upsert",
+            text="ℹ  national_id เป็นตัวเลือก — ระบบค้นหาซ้ำด้วย: national_id → hn → ชื่อ+นามสกุล (+วันเกิด)",
             font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
-            text_color="#f57c00", anchor="w",
+            text_color="#1565c0", anchor="w",
         ).pack(fill="x", padx=16, pady=(0, 12))
 
         self._lbl_filepath = ctk.CTkLabel(

@@ -71,23 +71,40 @@ class ExportService:
         ).fetchall()
         df_vitals = pd.DataFrame([dict(r) for r in vitals]) if vitals else pd.DataFrame()
 
-        # Labs
+        # Standard labs (wide format — one column per test)
         labs = conn.execute(
             """
-            SELECT p.hn, lr.test_name, lr.value
+            SELECT p.hn, lr.fbs, lr.hba1c, lr.total_chol, lr.hdl, lr.ldl,
+                   lr.triglyceride, lr.creatinine, lr.bun, lr.uric_acid,
+                   lr.egfr, lr.sgot_ast, lr.sgpt_alt, lr.hb, lr.hct,
+                   lr.wbc, lr.platelet, lr.ua_glucose, lr.ua_protein,
+                   lr.ua_blood, lr.tsh
               FROM lab_results lr
               JOIN patients p ON p.id = lr.patient_id
              WHERE lr.session_id = ?
             """,
             (session_id,),
         ).fetchall()
-        if labs:
-            df_labs_long = pd.DataFrame([dict(r) for r in labs])
-            df_labs = df_labs_long.pivot_table(
+        df_labs = pd.DataFrame([dict(r) for r in labs]) if labs else pd.DataFrame()
+
+        # Custom labs (pivot long → wide)
+        custom_labs = conn.execute(
+            """
+            SELECT p.hn, clr.test_name, clr.value
+              FROM custom_lab_results clr
+              JOIN patients p ON p.id = clr.patient_id
+             WHERE clr.session_id = ?
+            """,
+            (session_id,),
+        ).fetchall()
+        if custom_labs:
+            df_custom_long = pd.DataFrame([dict(r) for r in custom_labs])
+            df_custom = df_custom_long.pivot_table(
                 index="hn", columns="test_name", values="value", aggfunc="first"
             ).reset_index()
+            df_custom.columns.name = None
         else:
-            df_labs = pd.DataFrame()
+            df_custom = pd.DataFrame()
 
         with pd.ExcelWriter(filename, engine="openpyxl") as writer:
             if not df_patients.empty:
@@ -96,6 +113,8 @@ class ExportService:
                 df_vitals.to_excel(writer, sheet_name="Vitals", index=False)
             if not df_labs.empty:
                 df_labs.to_excel(writer, sheet_name="Labs", index=False)
+            if not df_custom.empty:
+                df_custom.to_excel(writer, sheet_name="Custom Labs", index=False)
 
         return filename
 
