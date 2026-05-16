@@ -51,6 +51,23 @@ class PatientService:
         ).fetchone()
         return dict(r) if r else None
 
+    def get_by_name_dob(
+        self, first_name: str, last_name: str, dob: str | None = None
+    ) -> dict | None:
+        conn = get_connection()
+        if dob:
+            r = conn.execute(
+                "SELECT * FROM patients "
+                "WHERE first_name = ? AND last_name = ? AND date_of_birth = ?",
+                (first_name.strip(), last_name.strip(), dob),
+            ).fetchone()
+        else:
+            r = conn.execute(
+                "SELECT * FROM patients WHERE first_name = ? AND last_name = ?",
+                (first_name.strip(), last_name.strip()),
+            ).fetchone()
+        return dict(r) if r else None
+
     # ── Write ──────────────────────────────────────────────────────────
 
     def create(self, data: dict, user_id: int) -> dict:
@@ -97,12 +114,17 @@ class PatientService:
     def upsert(self, data: dict, user_id: int) -> tuple[dict, bool]:
         """Returns (patient_dict, is_new)."""
         existing = None
-        nid = (data.get("national_id") or "").strip()
-        hn  = (data.get("hn") or "").strip()
+        nid   = (data.get("national_id") or "").strip()
+        hn    = (data.get("hn") or "").strip()
+        first = (data.get("first_name") or "").strip()
+        last  = (data.get("last_name") or "").strip()
+        dob   = (data.get("date_of_birth") or "").strip() or None
         if nid:
             existing = self.get_by_national_id(nid)
         if not existing and hn:
             existing = self.get_by_hn(hn)
+        if not existing and first and last:
+            existing = self.get_by_name_dob(first, last, dob)
         if existing:
             self.update(existing["id"], data)
             return self.get_by_hn(existing["hn"]), False

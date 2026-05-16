@@ -165,6 +165,9 @@ class ImportService:
                     existing = self._psvc.get_by_national_id(nid)
                 if not existing and hn:
                     existing = self._psvc.get_by_hn(hn)
+                if not existing and first and last:
+                    dob = parsed["demo"].get("date_of_birth")
+                    existing = self._psvc.get_by_name_dob(first, last, dob)
 
                 rp.is_new = existing is None
                 if rp.is_new:

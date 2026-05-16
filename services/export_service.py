@@ -48,6 +48,17 @@ class ExportService:
         ).fetchall()
         df_patients = pd.DataFrame([dict(r) for r in patients])
 
+        _ATTEND = {
+            "checked_in": "มาตรวจแล้ว",
+            "done":       "มาตรวจแล้ว",
+            "pending":    "ยังไม่มาตรวจ",
+            "absent":     "ยังไม่มาตรวจ",
+        }
+        if not df_patients.empty:
+            attendance = df_patients["status"].map(_ATTEND).fillna("ยังไม่มาตรวจ")
+            ins = df_patients.columns.get_loc("last_name") + 1
+            df_patients.insert(ins, "สถานะการมา", attendance)
+
         # Vitals
         vitals = conn.execute(
             """

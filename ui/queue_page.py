@@ -129,7 +129,7 @@ class QueuePage(ctk.CTkFrame):
 
         # ── Entry row ──────────────────────────────────────────────────
         ctk.CTkLabel(
-            inner, text="🔍  สแกนบาร์โค้ด หรือพิมพ์ HN / เลขบัตรแล้วกด Enter",
+            inner, text="🔍  สแกนบาร์โค้ด หรือพิมพ์ HN / เลขบัตร (กด Enter เพื่อยืนยัน)",
             font=ctk.CTkFont(family="Segoe UI", size=16, weight="bold"),
             text_color="#aac8e4",
         ).pack()
@@ -361,6 +361,8 @@ class QueuePage(ctk.CTkFrame):
 
         self._lbl_count.configure(text=f"แสดง {len(rows)} รายการ")
         self._render(rows, session)
+        if self._scan_mode:
+            self.after(50, self._scan_entry.focus_set)
 
     def _update_stats_chips(self, stats: dict) -> None:
         arrived = stats.get("checked_in", 0) + stats.get("done", 0)
