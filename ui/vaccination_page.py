@@ -6,7 +6,9 @@ from services.vaccination_service import (
 )
 from services.queue_service import QueueService, OK, NOT_FOUND, NOT_ENROLLED
 from services.audit_service import AuditService
-from utils.date_utils import be
+from services.print_service import print_consent_form
+from utils.date_utils import be, today_be_long
+from config import LOGO_PATH
 
 
 class VaccinationPage(ctk.CTkFrame):
@@ -267,6 +269,14 @@ class VaxEntryPanel(ctk.CTkFrame):
             text_color="white",
         ).pack(side="left", padx=16, pady=10)
 
+        ctk.CTkButton(
+            hdr, text="🖨️  พิมพ์แบบฟอร์ม",
+            width=160, height=34,
+            fg_color="#4a148c", hover_color="#38006b",
+            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
+            command=self._print_consent,
+        ).pack(side="right", padx=12)
+
         tab_row = ctk.CTkFrame(self, fg_color="transparent", height=40)
         tab_row.pack(fill="x")
         tab_row.pack_propagate(False)
@@ -288,6 +298,30 @@ class VaxEntryPanel(ctk.CTkFrame):
         self._tab_content = ctk.CTkFrame(self, fg_color="transparent")
         self._tab_content.pack(fill="both", expand=True, pady=(8, 0))
         self._switch_tab("entry")
+
+    def _print_consent(self) -> None:
+        """Generate and print the A5 vaccine consent form for this patient."""
+        session_date = ""
+        raw = (self._session.get("session_date") or "")[:10]
+        if raw:
+            try:
+                y, m, d = raw.split("-")
+                session_date = f"{d}/{m}/{int(y) + 543}"
+            except Exception:
+                session_date = raw
+        if not session_date:
+            session_date = today_be_long()
+
+        patient = {
+            "hn":         self._pr.get("hn", ""),
+            "first_name": self._pr.get("first_name", ""),
+            "last_name":  self._pr.get("last_name", ""),
+        }
+        try:
+            print_consent_form(patient, session_date, logo_path=LOGO_PATH)
+        except Exception as exc:
+            from tkinter import messagebox
+            messagebox.showerror("พิมพ์ไม่สำเร็จ", str(exc))
 
     def _switch_tab(self, key: str) -> None:
         for w in self._tab_content.winfo_children():

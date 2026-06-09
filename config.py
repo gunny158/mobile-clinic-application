@@ -25,3 +25,5 @@ HN_PREFIX   = "HN"          # HN-YYMM-XXXX
 SESSION_PREFIX = "SS"        # SS-YYYY-NNN
 
 THEME_COLOR = "#1a6bb5"      # primary blue
+
+LOGO_PATH   = str(ASSETS_DIR / "logo.png")    # place logo.png in assets/ folder
