@@ -12,6 +12,7 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.utils import ImageReader
+from config import HOSP_NAME_TH, HOSP_NAME_EN, HOSP_NAME_SHORT, HOSP_PHONE
 
 _REGISTERED: set[str] = set()
 
@@ -129,12 +130,12 @@ def generate_vaccine_consent(
     # Hospital name block
     c.setFont(font_bold, 15)
     c.setFillColor(colors.HexColor("#003366"))
-    c.drawString(hosp_x, H - 12 * mm, "บางประกอก 1")
+    c.drawString(hosp_x, H - 12 * mm, HOSP_NAME_SHORT)
     c.setFont(font, 10)
-    c.drawString(hosp_x, H - 18 * mm, "BANGPAKOK 1 HOSPITAL")
+    c.drawString(hosp_x, H - 18 * mm, HOSP_NAME_EN)
     c.setFont(font, 9)
     c.setFillColor(colors.HexColor("#666666"))
-    c.drawString(hosp_x, H - 23 * mm, "โทร. 02-109-1111")
+    c.drawString(hosp_x, H - 23 * mm, f"โทร. {HOSP_PHONE}")
 
     # Barcode (top-right)
     bc_reader = _make_barcode_reader(hn)

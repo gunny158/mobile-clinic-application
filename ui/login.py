@@ -3,7 +3,7 @@ from typing import Callable
 import customtkinter as ctk
 from PIL import Image
 from services.auth_service import AuthService
-from config import APP_VERSION, LOGO_PATH
+from config import APP_VERSION, LOGO_PATH, HOSP_NAME_TH, HOSP_PHONE
 
 
 class LoginWindow(ctk.CTkToplevel):
@@ -102,7 +102,7 @@ class LoginWindow(ctk.CTkToplevel):
     def _build_footer(self) -> None:
         ctk.CTkLabel(
             self,
-            text=f"v{APP_VERSION}  |  BPK1 MOBILE UNIT",
+            text=f"v{APP_VERSION}  |  {HOSP_NAME_TH}  |  โทร. {HOSP_PHONE}",
             font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold"),
             text_color="gray",
         ).pack(pady=(0, 14))

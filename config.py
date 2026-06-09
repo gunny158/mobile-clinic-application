@@ -21,9 +21,16 @@ ASSETS_DIR  = _ASSETS  / "assets"
 APP_TITLE   = "BPK1 MOBILE UNIT — Health Screening System"
 APP_VERSION = "1.0.0"
 
-HN_PREFIX   = "HN"          # HN-YYMM-XXXX
-SESSION_PREFIX = "SS"        # SS-YYYY-NNN
+HN_PREFIX      = "HN"   # HN-YYMM-XXXX
+SESSION_PREFIX = "SS"   # SS-YYYY-NNN
 
-THEME_COLOR = "#1a6bb5"      # primary blue
+THEME_COLOR = "#1a6bb5"   # primary blue
 
-LOGO_PATH   = str(ASSETS_DIR / "logo.png")    # place logo.png in assets/ folder
+LOGO_PATH = str(ASSETS_DIR / "logo.png")
+
+# ── Hospital identity (แก้ที่นี่ที่เดียว) ─────────────────────────────────────
+HOSP_NAME_TH  = "โรงพยาบาลบางปะกอก 1"
+HOSP_NAME_EN  = "BANGPAKOK 1 HOSPITAL"
+HOSP_NAME_SHORT = "บางปะกอก 1"
+HOSP_PHONE    = "02-109-1111"
+HOSP_ADDRESS  = "9 ถนนนราธิวาสราชนครินทร์ แขวงช่องนนทรี เขตยานนาวา กรุงเทพฯ 10120"
