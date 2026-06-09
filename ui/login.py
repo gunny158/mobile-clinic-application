@@ -1,8 +1,9 @@
 from __future__ import annotations
 from typing import Callable
 import customtkinter as ctk
+from PIL import Image
 from services.auth_service import AuthService
-from config import APP_VERSION
+from config import APP_VERSION, LOGO_PATH
 
 
 class LoginWindow(ctk.CTkToplevel):
@@ -34,14 +35,19 @@ class LoginWindow(ctk.CTkToplevel):
         header.pack(fill="x")
         header.pack_propagate(False)
 
-        ctk.CTkLabel(
-            header, text="🏥", font=ctk.CTkFont(size=44, weight="bold")
-        ).pack(pady=(22, 2))
-        ctk.CTkLabel(
-            header, text="BPK1 MOBILE UNIT",
-            font=ctk.CTkFont(family="Segoe UI", size=22, weight="bold"),
-            text_color="white",
-        ).pack()
+        try:
+            img = Image.open(LOGO_PATH)
+            logo_img = ctk.CTkImage(img, size=(220, 53))
+            ctk.CTkLabel(header, image=logo_img, text="").pack(pady=(22, 4))
+        except Exception:
+            ctk.CTkLabel(
+                header, text="🏥", font=ctk.CTkFont(size=44, weight="bold")
+            ).pack(pady=(22, 2))
+            ctk.CTkLabel(
+                header, text="BPK1 MOBILE UNIT",
+                font=ctk.CTkFont(family="Segoe UI", size=22, weight="bold"),
+                text_color="white",
+            ).pack()
         ctk.CTkLabel(
             header, text="ระบบตรวจสุขภาพเคลื่อนที่",
             font=ctk.CTkFont(family="Segoe UI", size=15, weight="bold"),

@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Callable
 import customtkinter as ctk
+from PIL import Image
+from config import LOGO_PATH
 
 NAV_ITEMS = [
     ("dashboard",    "🏠", "หน้าหลัก"),
@@ -61,15 +63,20 @@ class MainWindow(ctk.CTkToplevel):
         logo = ctk.CTkFrame(sb, fg_color="transparent", height=88)
         logo.pack(fill="x")
         logo.pack_propagate(False)
-        ctk.CTkLabel(
-            logo, text="🏥",
-            font=ctk.CTkFont(size=33, weight="bold"),
-        ).place(relx=0.5, rely=0.32, anchor="center")
-        ctk.CTkLabel(
-            logo, text="BPK1 MOBILE UNIT",
-            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
-            text_color="white",
-        ).place(relx=0.5, rely=0.72, anchor="center")
+        try:
+            img = Image.open(LOGO_PATH)
+            logo_img = ctk.CTkImage(img, size=(180, 43))
+            ctk.CTkLabel(logo, image=logo_img, text="").place(relx=0.5, rely=0.45, anchor="center")
+        except Exception:
+            ctk.CTkLabel(
+                logo, text="🏥",
+                font=ctk.CTkFont(size=33, weight="bold"),
+            ).place(relx=0.5, rely=0.32, anchor="center")
+            ctk.CTkLabel(
+                logo, text="BPK1 MOBILE UNIT",
+                font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
+                text_color="white",
+            ).place(relx=0.5, rely=0.72, anchor="center")
 
         ctk.CTkFrame(sb, height=1, fg_color="#1a3a5c").pack(fill="x", padx=14, pady=2)
 
