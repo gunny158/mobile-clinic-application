@@ -8,6 +8,8 @@ from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 datas = [
     # App schema — must be inside the bundle so it can be read on first run
     ("database/schema.sql", "database"),
+    # Logo and assets folder
+    ("assets/logo.png", "assets"),
 ]
 datas += collect_data_files("customtkinter")   # themes, images, fonts
 datas += collect_data_files("barcode")         # barcode writer SVG templates
